@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "pkg/api/test";
+option go_package = "pkg/api/client";
 
 
 package api;
