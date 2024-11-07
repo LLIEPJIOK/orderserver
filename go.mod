@@ -1,6 +1,6 @@
 module gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195
 
-go 1.23.2
+go 1.23
 
 require (
 	github.com/google/uuid v1.6.0
