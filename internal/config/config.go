@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	GRPCServerPort int `env:"GRPC_SERVER_PORT" env-default:"50051"`
+	RESTServerPort int `env:"REST_SERVER_PORT" env-default:"8080"`
 }
 
 func New() (*Config, error) {

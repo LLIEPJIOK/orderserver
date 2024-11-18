@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/models"
+	client "gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/api/order"
 )
 
 type OrderRepository interface {
@@ -15,6 +16,7 @@ type OrderRepository interface {
 }
 
 type OrderService struct {
+	client.UnimplementedOrderServiceServer
 	repo OrderRepository
 }
 
