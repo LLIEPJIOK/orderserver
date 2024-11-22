@@ -1,0 +1,178 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json",
+  "version": "3.0.0",
+  "settings": {
+    "width": 2000,
+    "height": 2000,
+    "scrollTop": -2,
+    "scrollLeft": -3,
+    "zoomLevel": 1,
+    "show": 431,
+    "database": 4,
+    "databaseName": "",
+    "canvasType": "@dineug/erd-editor/builtin-schema-sql",
+    "language": 1,
+    "tableNameCase": 4,
+    "columnNameCase": 2,
+    "bracketType": 1,
+    "relationshipDataTypeSync": true,
+    "relationshipOptimization": false,
+    "columnOrder": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "maxWidthComment": -1,
+    "ignoreSaveSettings": 0
+  },
+  "doc": {
+    "tableIds": [
+      "n5d9qZTkGlgY5gH-Bb7ut"
+    ],
+    "relationshipIds": [],
+    "indexIds": [],
+    "memoIds": []
+  },
+  "collections": {
+    "tableEntities": {
+      "n5d9qZTkGlgY5gH-Bb7ut": {
+        "id": "n5d9qZTkGlgY5gH-Bb7ut",
+        "name": "orders",
+        "comment": "",
+        "columnIds": [
+          "CyCt0IskmUHckXy07Lr7z",
+          "rfpZGOZFa1Avsqdc8F864",
+          "8e-T4woMg8-IjXdtM9_wR"
+        ],
+        "seqColumnIds": [
+          "CyCt0IskmUHckXy07Lr7z",
+          "rfpZGOZFa1Avsqdc8F864",
+          "8e-T4woMg8-IjXdtM9_wR"
+        ],
+        "ui": {
+          "x": 203,
+          "y": 102,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1732002334631,
+          "createAt": 1732002250218
+        }
+      }
+    },
+    "tableColumnEntities": {
+      "CyCt0IskmUHckXy07Lr7z": {
+        "id": "CyCt0IskmUHckXy07Lr7z",
+        "tableId": "n5d9qZTkGlgY5gH-Bb7ut",
+        "name": "id",
+        "comment": "",
+        "dataType": "UUID",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1732010245698,
+          "createAt": 1732002261183
+        }
+      },
+      "rfpZGOZFa1Avsqdc8F864": {
+        "id": "rfpZGOZFa1Avsqdc8F864",
+        "tableId": "n5d9qZTkGlgY5gH-Bb7ut",
+        "name": "item",
+        "comment": "",
+        "dataType": "TEXT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1732002350176,
+          "createAt": 1732002313038
+        }
+      },
+      "8e-T4woMg8-IjXdtM9_wR": {
+        "id": "8e-T4woMg8-IjXdtM9_wR",
+        "tableId": "n5d9qZTkGlgY5gH-Bb7ut",
+        "name": "quantity",
+        "comment": "",
+        "dataType": "INT",
+        "default": "",
+        "options": 8,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1732002357075,
+          "createAt": 1732002334631
+        }
+      }
+    },
+    "relationshipEntities": {},
+    "indexEntities": {},
+    "indexColumnEntities": {},
+    "memoEntities": {}
+  },
+  "lww": {
+    "n5d9qZTkGlgY5gH-Bb7ut": [
+      "tableEntities",
+      1732002250216,
+      -1,
+      {
+        "name": 1732002259512
+      }
+    ],
+    "CyCt0IskmUHckXy07Lr7z": [
+      "tableColumnEntities",
+      1732002261183,
+      -1,
+      {
+        "name": 1732002278434,
+        "dataType": 1732010245697,
+        "options(notNull)": 1732002300012,
+        "options(primaryKey)": 1732002309936
+      }
+    ],
+    "rfpZGOZFa1Avsqdc8F864": [
+      "tableColumnEntities",
+      1732002313037,
+      -1,
+      {
+        "name": 1732002320623,
+        "dataType": 1732002350175,
+        "options(notNull)": 1732002332985
+      }
+    ],
+    "8e-T4woMg8-IjXdtM9_wR": [
+      "tableColumnEntities",
+      1732002334630,
+      -1,
+      {
+        "name": 1732002337960,
+        "dataType": 1732002344089,
+        "options(notNull)": 1732002357075
+      }
+    ]
+  }
+}

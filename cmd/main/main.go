@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -11,22 +11,43 @@ import (
 	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/repository"
 	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/service"
 	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/transport/grpc"
+	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/database/postgres"
+	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/database/redis"
+	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/logger"
+)
+
+const (
+	serviceName = "lyceum"
+	loggerLvl   = slog.LevelInfo
 )
 
 func main() {
 	ctx := context.Background()
 
+	serviceLogger := logger.New(os.Stdout, loggerLvl, serviceName)
+	ctx = logger.CtxWithLogger(ctx, serviceLogger)
+
 	cfg, err := config.New()
 	if err != nil {
-		log.Fatalf("failed to get config: %s", err)
+		serviceLogger.Fatalf(ctx, "failed to get config: %s", err)
 	}
 
-	repo := repository.NewOrderRepository()
+	db, err := postgres.NewPostgres(cfg.PostgresConfig)
+	if err != nil {
+		serviceLogger.Fatalf(ctx, "failed to init database: %s", err)
+	}
+
+	cache, err := redis.New(cfg.RedisConfig)
+	if err != nil {
+		serviceLogger.Fatalf(ctx, "failed to init cache: %s", err)
+	}
+
+	repo := repository.NewOrderRepository(db, cache)
 	ordService := service.NewOrderService(repo)
 
 	grpcServer, err := grpc.New(ctx, cfg.GRPCServerPort, cfg.RESTServerPort, ordService)
 	if err != nil {
-		log.Fatalf("failed to prepare server: %s", err)
+		serviceLogger.Fatalf(ctx, "failed to prepare server: %s", err)
 	}
 
 	graceCh := make(chan os.Signal, 1)
@@ -34,16 +55,19 @@ func main() {
 
 	go func() {
 		if err := grpcServer.Start(ctx); err != nil {
-			log.Printf("failed to start server: %s", err)
+			serviceLogger.Errorf(ctx, "failed to start server: %s", err)
 		}
 	}()
 
 	<-graceCh
 
 	if err := grpcServer.Stop(ctx); err != nil {
-		log.Printf("failed to stop server: %s", err)
-		os.Exit(1)
+		serviceLogger.Errorf(ctx, "failed to stop server: %s", err)
 	}
 
-	log.Println("Server stopped")
+	if err := db.Close(); err != nil {
+		serviceLogger.Errorf(ctx, "failed to close db: %s", err)
+	}
+
+	serviceLogger.Infof(ctx, "Server stopped")
 }

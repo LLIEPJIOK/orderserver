@@ -2,13 +2,14 @@ package grpc
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"log"
 	"net"
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	client "gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/api/order"
+	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/logger"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 )
@@ -25,7 +26,9 @@ func New(ctx context.Context, grpcPort, restPort int, srv Service) (*Server, err
 		return nil, fmt.Errorf("failed to listen: %w", err)
 	}
 
-	var opts []grpc.ServerOption
+	opts := []grpc.ServerOption{
+		grpc.UnaryInterceptor(LoggerInterceptor(logger.GetLoggerFromCtx(ctx))),
+	}
 
 	grpcServer := grpc.NewServer(opts...)
 	client.RegisterOrderServiceServer(grpcServer, NewOrderService(srv))
@@ -49,10 +52,11 @@ func New(ctx context.Context, grpcPort, restPort int, srv Service) (*Server, err
 }
 
 func (s *Server) Start(ctx context.Context) error {
-	eg, _ := errgroup.WithContext(ctx)
+	eg, ctx := errgroup.WithContext(ctx)
+	serviceLogger := logger.GetLoggerFromCtx(ctx)
 
 	eg.Go(func() error {
-		log.Printf("starting gRPC server at address=%s", s.listener.Addr().String())
+		serviceLogger.Infof(ctx, "starting gRPC server at address=%s", s.listener.Addr().String())
 
 		if err := s.grpcServer.Serve(s.listener); err != nil {
 			return fmt.Errorf("start grpc server: %w", err)
@@ -62,10 +66,12 @@ func (s *Server) Start(ctx context.Context) error {
 	})
 
 	eg.Go(func() error {
-		log.Printf("starting rest server at address=%q", s.restServer.Addr)
+		serviceLogger.Infof(ctx, "starting rest server at address=%q", s.restServer.Addr)
 
 		if err := s.restServer.ListenAndServe(); err != nil {
-			return fmt.Errorf("start rest server: %w", err)
+			if !errors.Is(err, http.ErrServerClosed) {
+				return fmt.Errorf("start rest server: %w", err)
+			}
 		}
 
 		return nil

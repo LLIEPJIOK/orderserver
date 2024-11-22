@@ -6,6 +6,7 @@ import (
 
 	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/models"
 	client "gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/api/order"
+	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/logger"
 )
 
 type Service interface {
@@ -33,6 +34,7 @@ func (s *OrderService) CreateOrder(
 ) (*client.CreateOrderResponse, error) {
 	ord, err := s.service.CreateOrder(ctx, req.GetItem(), req.GetQuantity())
 	if err != nil {
+		logger.GetLoggerFromCtx(ctx).Errorf(ctx, err.Error())
 		return nil, fmt.Errorf("create order: %w", err)
 	}
 
@@ -47,6 +49,7 @@ func (s *OrderService) GetOrder(
 ) (*client.GetOrderResponse, error) {
 	ord, err := s.service.GetOrder(ctx, req.GetId())
 	if err != nil {
+		logger.GetLoggerFromCtx(ctx).Errorf(ctx, err.Error())
 		return nil, fmt.Errorf("get order: %w", err)
 	}
 
@@ -65,6 +68,7 @@ func (s *OrderService) UpdateOrder(
 ) (*client.UpdateOrderResponse, error) {
 	ord, err := s.service.UpdateOrder(ctx, req.GetId(), req.GetItem(), req.GetQuantity())
 	if err != nil {
+		logger.GetLoggerFromCtx(ctx).Errorf(ctx, err.Error())
 		return nil, fmt.Errorf("update order: %w", err)
 	}
 
@@ -83,6 +87,7 @@ func (s *OrderService) DeleteOrder(
 ) (*client.DeleteOrderResponse, error) {
 	_, err := s.service.DeleteOrder(ctx, req.GetId())
 	if err != nil {
+		logger.GetLoggerFromCtx(ctx).Errorf(ctx, err.Error())
 		return nil, fmt.Errorf("delete order: %w", err)
 	}
 
@@ -97,6 +102,7 @@ func (s *OrderService) ListOrders(
 ) (*client.ListOrdersResponse, error) {
 	ordList, err := s.service.ListOrders(ctx)
 	if err != nil {
+		logger.GetLoggerFromCtx(ctx).Errorf(ctx, err.Error())
 		return nil, fmt.Errorf("list orders: %w", err)
 	}
 

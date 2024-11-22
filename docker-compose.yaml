@@ -1,7 +1,73 @@
-version: "3.8"
-
 services:
   app:
     build: ./
+    container_name: app_container
     ports:
       - 50051:50051
+      - 8080:8080
+    networks:
+      - app
+    env_file: "./.env"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - app
+    env_file: "./.env"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    volumes:
+      - redis_data:/data
+    ports:
+      - 6379:6379
+    networks:
+      - app
+    env_file: "./.env"
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    image: migrate/migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app
+    volumes:
+      - ./database/migrations/:/database/migrations
+    env_file: "./.env"
+    command:
+      [
+        "-path",
+        "/database/migrations/",
+        "-database",
+        "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",
+        "up",
+      ]
+
+networks:
+  app:
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -2,103 +2,110 @@ package repository
 
 import (
 	"context"
-	"sync"
+	"errors"
+	"fmt"
 
-	"github.com/google/uuid"
 	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/models"
+	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/database"
 )
 
+type DB interface {
+	AddOrder(ctx context.Context, item string, quantity int32) (*models.Order, error)
+	GetOrder(ctx context.Context, id string) (*models.Order, error)
+	ListOrders(ctx context.Context) ([]*models.Order, error)
+	UpdateOrder(ctx context.Context, id string, item string, quantity int32) (*models.Order, error)
+	DeleteOrder(ctx context.Context, id string) (*models.Order, error)
+}
+
+type Cache interface {
+	SetOrder(ctx context.Context, order *models.Order) error
+	GetOrder(ctx context.Context, id string) (*models.Order, error)
+	DeleteOrder(ctx context.Context, id string) error
+}
+
 type OrderRepository struct {
-	mu     *sync.Mutex
-	orders map[string]models.Order
+	db    DB
+	cache Cache
 }
 
-func NewOrderRepository() *OrderRepository {
+func NewOrderRepository(db DB, cache Cache) *OrderRepository {
 	return &OrderRepository{
-		mu:     &sync.Mutex{},
-		orders: make(map[string]models.Order),
+		db:    db,
+		cache: cache,
 	}
 }
 
-func (r *OrderRepository) CreateOrder(_ context.Context, item string, quantity int32) (*models.Order, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	id := uuid.NewString()
-
-	for {
-		if _, ok := r.orders[id]; !ok {
-			break
-		}
-		id = uuid.NewString()
+func (r *OrderRepository) CreateOrder(
+	ctx context.Context,
+	item string,
+	quantity int32,
+) (*models.Order, error) {
+	ord, err := r.db.AddOrder(ctx, item, quantity)
+	if err != nil {
+		return nil, fmt.Errorf("database.AddOrder: %w", err)
 	}
 
-	ord := models.Order{
-		ID:       id,
-		Item:     item,
-		Quantity: quantity,
+	err = r.cache.SetOrder(ctx, ord)
+	if err != nil {
+		return nil, fmt.Errorf("cache.SetOrder: %w", err)
 	}
-	r.orders[id] = ord
 
-	return &ord, nil
+	return ord, nil
 }
 
-func (r *OrderRepository) GetOrder(_ context.Context, id string) (*models.Order, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	ord, ok := r.orders[id]
-	if !ok {
-		return nil, NewErrOrderNotFound(id)
+func (r *OrderRepository) GetOrder(ctx context.Context, id string) (*models.Order, error) {
+	ord, err := r.cache.GetOrder(ctx, id)
+	if err == nil && !errors.As(err, &database.ErrNotExists{}) {
+		return ord, nil
+	} else if !errors.As(err, &database.ErrNotExists{}) {
+		return nil, fmt.Errorf("cache.GetOrder: %w", err)
 	}
 
-	return &ord, nil
+	ord, err = r.db.GetOrder(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("database.GetOrder: %w", err)
+	}
+
+	return ord, nil
 }
 
-func (r *OrderRepository) UpdateOrder(_ context.Context, id, item string, quantity int32) (*models.Order, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	ord, ok := r.orders[id]
-	if !ok {
-		return nil, NewErrOrderNotFound(id)
+func (r *OrderRepository) UpdateOrder(
+	ctx context.Context,
+	id, item string,
+	quantity int32,
+) (*models.Order, error) {
+	ord, err := r.db.UpdateOrder(ctx, id, item, quantity)
+	if err != nil {
+		return nil, fmt.Errorf("database.UpdateOrder: %w", err)
 	}
 
-	if item != "" {
-		ord.Item = item
+	err = r.cache.SetOrder(ctx, ord)
+	if err != nil {
+		return nil, fmt.Errorf("cache.SetOrder: %w", err)
 	}
 
-	if quantity != 0 {
-		ord.Quantity = quantity
-	}
-
-	r.orders[id] = ord
-
-	return &ord, nil
+	return ord, nil
 }
 
-func (r *OrderRepository) DeleteOrder(_ context.Context, id string) (*models.Order, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	ord, ok := r.orders[id]
-	if !ok {
-		return nil, NewErrOrderNotFound(id)
+func (r *OrderRepository) DeleteOrder(ctx context.Context, id string) (*models.Order, error) {
+	ord, err := r.db.DeleteOrder(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("database.UpdateOrder: %w", err)
 	}
 
-	delete(r.orders, id)
+	err = r.cache.DeleteOrder(ctx, id)
+	if err != nil && !errors.As(err, &database.ErrNotExists{}) {
+		return nil, fmt.Errorf("cache.DeleteOrder: %w", err)
+	}
 
-	return &ord, nil
+	return ord, nil
 }
 
-func (r *OrderRepository) ListOrders(_ context.Context) ([]*models.Order, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
-	ordList := make([]*models.Order, 0, len(r.orders))
-	for _, ord := range r.orders {
-		ordList = append(ordList, &ord)
+func (r *OrderRepository) ListOrders(ctx context.Context) ([]*models.Order, error) {
+	ord, err := r.db.ListOrders(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("database.ListOrder: %w", err)
 	}
 
-	return ordList, nil
+	return ord, nil
 }
