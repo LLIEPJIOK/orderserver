@@ -2,7 +2,12 @@ image: golang:alpine
 
 stages:
   - build
+  - test
 
 build-job:
   stage: build
-  script: go run cmd/main/main.go
+  script: go build cmd/main/main.go
+
+test-job:
+  stage: test
+  script: go test ./...

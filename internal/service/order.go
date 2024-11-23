@@ -7,6 +7,7 @@ import (
 	client "gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/api/order"
 )
 
+//go:generate mockery --name OrderRepository  --structname MockOrderRepository --filename mock_order_repository_test.go --outpkg service_test --output .
 type OrderRepository interface {
 	CreateOrder(ctx context.Context, item string, quantity int32) (*models.Order, error)
 	GetOrder(ctx context.Context, id string) (*models.Order, error)
