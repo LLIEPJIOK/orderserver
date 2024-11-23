@@ -1,10 +1,40 @@
 services:
-  app:
+  app1:
     build: ./
-    container_name: app_container
+    container_name: app1_container
     ports:
       - 50051:50051
-      - 8080:8080
+      - 8081:8080
+    networks:
+      - app
+    env_file: "./.env"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  app2:
+    build: ./
+    container_name: app2_container
+    ports:
+      - 50052:50051
+      - 8082:8080
+    networks:
+      - app
+    env_file: "./.env"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  app3:
+    build: ./
+    container_name: app3_container
+    ports:
+      - 50053:50050
+      - 8083:8080
     networks:
       - app
     env_file: "./.env"
@@ -64,6 +94,23 @@ services:
         "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",
         "up",
       ]
+
+  nginx:
+    image: nginx
+    container_name: nginx_container
+    ports:
+      - 80:80
+    volumes:
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      app1:
+        condition: service_started
+      app2:
+        condition: service_started
+      app3:
+        condition: service_started
+    networks:
+      - app
 
 networks:
   app:

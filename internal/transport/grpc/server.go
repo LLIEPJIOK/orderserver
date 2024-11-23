@@ -21,7 +21,7 @@ type Server struct {
 }
 
 func New(ctx context.Context, grpcPort, restPort int, srv Service) (*Server, error) {
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", grpcPort))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
 	if err != nil {
 		return nil, fmt.Errorf("failed to listen: %w", err)
 	}

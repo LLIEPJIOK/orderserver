@@ -54,16 +54,16 @@ func (c *Cache) GetOrder(ctx context.Context, id string) (*models.Order, error) 
 	key := orderIDKey(id)
 
 	val, err := c.cache.Get(ctx, key).Result()
-	if err != nil {
+	if errors.Is(err, redis.Nil) {
+		return nil, database.NewErrNotExists(id)
+	} else if err != nil {
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
 	var ord models.Order
 
 	err = json.Unmarshal([]byte(val), &ord)
-	if errors.Is(err, redis.Nil) {
-		return nil, database.NewErrNotExists(id)
-	} else if err != nil {
+	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal json: %w", err)
 	}
 
