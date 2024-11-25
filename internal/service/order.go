@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/models"
-	client "gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/api/order"
+	"github.com/LLIEPJIOK/orderserver/internal/models"
+	client "github.com/LLIEPJIOK/orderserver/pkg/api/order"
 )
 
 //go:generate mockery --name OrderRepository  --structname MockOrderRepository --filename mock_order_repository_test.go --outpkg service_test --output .

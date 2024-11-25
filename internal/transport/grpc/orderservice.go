@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/models"
-	client "gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/api/order"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/logger"
+	"github.com/LLIEPJIOK/orderserver/internal/models"
+	client "github.com/LLIEPJIOK/orderserver/pkg/api/order"
+	"github.com/LLIEPJIOK/orderserver/pkg/logger"
 )
 
 type Service interface {

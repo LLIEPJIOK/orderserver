@@ -1,9 +1,8 @@
-module gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195
+module github.com/LLIEPJIOK/orderserver
 
 go 1.23
 
 require (
-	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.23.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jmoiron/sqlx v1.4.0

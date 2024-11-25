@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/ilyakaznacheev/cleanenv"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/database/postgres"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/database/redis"
+	"github.com/LLIEPJIOK/orderserver/pkg/database/postgres"
+	"github.com/LLIEPJIOK/orderserver/pkg/database/redis"
 )
 
 type Config struct {

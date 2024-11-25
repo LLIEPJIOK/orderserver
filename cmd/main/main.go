@@ -7,13 +7,13 @@ import (
 	"os/signal"
 	"syscall"
 
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/config"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/repository"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/service"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/transport/grpc"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/database/postgres"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/database/redis"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/logger"
+	"github.com/LLIEPJIOK/orderserver/internal/config"
+	"github.com/LLIEPJIOK/orderserver/internal/repository"
+	"github.com/LLIEPJIOK/orderserver/internal/service"
+	"github.com/LLIEPJIOK/orderserver/internal/transport/grpc"
+	"github.com/LLIEPJIOK/orderserver/pkg/database/postgres"
+	"github.com/LLIEPJIOK/orderserver/pkg/database/redis"
+	"github.com/LLIEPJIOK/orderserver/pkg/logger"
 )
 
 const (

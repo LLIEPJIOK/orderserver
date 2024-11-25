@@ -6,7 +6,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/models"
+	"github.com/LLIEPJIOK/orderserver/internal/models"
 )
 
 type PostgresConfig struct {

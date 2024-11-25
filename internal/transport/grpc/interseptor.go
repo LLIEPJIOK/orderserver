@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/logger"
+	"github.com/LLIEPJIOK/orderserver/pkg/logger"
 	"google.golang.org/grpc"
 )
 

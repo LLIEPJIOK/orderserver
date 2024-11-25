@@ -8,8 +8,8 @@ import (
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	client "gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/api/order"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/logger"
+	client "github.com/LLIEPJIOK/orderserver/pkg/api/order"
+	"github.com/LLIEPJIOK/orderserver/pkg/logger"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 )

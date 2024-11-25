@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/models"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/pkg/database"
+	"github.com/LLIEPJIOK/orderserver/internal/models"
+	"github.com/LLIEPJIOK/orderserver/pkg/database"
 )
 
 type DB interface {

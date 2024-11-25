@@ -6,8 +6,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/models"
-	"gitlab.crja72.ru/gospec/students/223640-nphne-et6ofbhg-course-1195/internal/service"
+	"github.com/LLIEPJIOK/orderserver/internal/models"
+	"github.com/LLIEPJIOK/orderserver/internal/service"
 )
 
 func TestCreateOrder(t *testing.T) {
